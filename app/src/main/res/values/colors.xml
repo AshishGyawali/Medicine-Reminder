@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="brand_primary">#8A3F39</color>
+    <color name="brand_primary_dark">#6E2F2A</color>
+    <color name="brand_primary_soft">#F4E5E3</color>
+    <color name="brand_accent">#26598C</color>
+    <color name="brand_accent_soft">#E2EAF3</color>
+    <color name="brand_on_primary">#FFFFFF</color>
+
+    <color name="surface">#FAF7F6</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="surface_subtle">#F1EDEC</color>
+    <color name="divider">#E7DFDD</color>
+
+    <color name="text_primary">#1F1413</color>
+    <color name="text_secondary">#5C4D4B</color>
+    <color name="text_tertiary">#998B89</color>
+
+    <color name="stock_good">#2F855A</color>
+    <color name="stock_warn">#B7791F</color>
+    <color name="stock_low">#9B2C2C</color>
+
+    <color name="danger">#B91C1C</color>
+</resources>

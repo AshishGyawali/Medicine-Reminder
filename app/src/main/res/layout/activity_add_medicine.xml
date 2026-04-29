@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/surface_card"
+        android:elevation="1dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/add_medicine"
+        app:titleTextAppearance="@style/ToolbarTitle"
+        app:titleTextColor="@color/brand_primary"/>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                style="@style/SectionHeader"
+                android:layout_marginTop="0dp"
+                android:text="@string/medicine_details"/>
+
+            <TextView style="@style/FormLabel" android:text="@string/medicine_name"/>
+
+            <EditText
+                android:id="@+id/medicine_name"
+                style="@style/FormInput"
+                android:hint="@string/medicine_name"
+                android:inputType="text"/>
+
+            <TextView
+                android:id="@+id/medicine_name_error"
+                style="@style/ErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <TextView style="@style/FormLabel" android:text="@string/dosage"/>
+
+            <EditText
+                android:id="@+id/dosage"
+                style="@style/FormInput"
+                android:hint="@string/dosage"
+                android:inputType="text"/>
+
+            <TextView
+                android:id="@+id/dosage_error"
+                style="@style/ErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <TextView style="@style/FormLabel" android:text="@string/medicine_type"/>
+
+            <Spinner
+                android:id="@+id/medicine_type"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:entries="@array/medicine_types"
+                android:background="@drawable/bg_input"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:spinnerMode="dropdown"/>
+
+            <TextView
+                android:id="@+id/medicine_type_error"
+                style="@style/ErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <TextView style="@style/FormLabel" android:text="@string/total_stock"/>
+
+            <EditText
+                android:id="@+id/total_stock"
+                style="@style/FormInput"
+                android:hint="@string/total_stock"
+                android:inputType="numberDecimal"/>
+
+            <TextView
+                android:id="@+id/total_stock_error"
+                style="@style/ErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <TextView style="@style/FormLabel" android:text="@string/daily_consumption"/>
+
+            <EditText
+                android:id="@+id/daily_consumption"
+                style="@style/FormInput"
+                android:hint="@string/daily_consumption"
+                android:inputType="numberDecimal"/>
+
+            <TextView
+                android:id="@+id/daily_consumption_error"
+                style="@style/ErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <TextView
+                style="@style/SectionHeader"
+                android:text="@string/reminder_times"/>
+
+            <LinearLayout
+                android:id="@+id/time_pickers_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+            <TextView
+                android:id="@+id/time_picker_error"
+                style="@style/ErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/save_btn"
+                style="@style/PrimaryButton"
+                android:layout_width="match_parent"
+                android:text="@string/save"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

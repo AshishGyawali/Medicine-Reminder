@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">औषधि रिमाइन्डर</string>
+    <string name="add_medicine">औषधि थप्नुहोस्</string>
+    <string name="view_history">इतिहास हेर्नुहोस्</string>
+    <string name="medicine_name">औषधिको नाम</string>
+    <string name="dosage">खुराक</string>
+    <string name="total_stock">कुल स्टक (ट्याब्लेट वा मिलि)</string>
+    <string name="daily_consumption">दैनिक खपत (ट्याब्लेट वा मिलि)</string>
+    <string name="save">सेभ गर्नुहोस्</string>
+    <string name="history">औषधि इतिहास</string>
+    <string name="snooze">पर्ख</string>
+    <string name="confirm">लियें</string>
+    <string name="edit_medicine">औषधि सम्पादन गर्नुहोस्</string>
+    <string name="cancel">रद्द गर्नुहोस्</string>
+    <string name="delete">हटाउनुहोस्</string>
+    <string name="have_you_taken">के तपाईंले आफ्नो औषधि लिनुभयो?</string>
+    <string name="reminders">रिमाइन्डर</string>
+    <string name="slide_to_stop">बन्द गर्न स्लाइड गर्नुहोस्</string>
+    <string name="stock_remaining">बाँकी स्टक</string>
+    <string name="reminder_times">रिमाइन्डर समयहरू</string>
+    <string name="reminder_time_n">समय %1$d</string>
+    <string name="info">जानकारी</string>
+    <string name="full_screen_intent_required">रिमाइन्डर पूर्ण स्क्रिनमा देखाउन अनुमति आवश्यक छ</string>
+    <string name="overlay_required">लक नभएको अवस्थामा रिमाइन्डर देखाउन \"अरू एपहरूमा देखाउने\" अनुमति दिनुहोस्</string>
+    <string name="medicine_type">औषधिको प्रकार</string>
+    <string name="medicine_details">औषधिको विवरण</string>
+    <string name="hello_greeting">नमस्ते 👋</string>
+    <string name="your_medicines">तपाईंका औषधिहरू</string>
+    <string name="total_medicines">कुल औषधि</string>
+    <string name="low_stock">कम स्टक</string>
+    <string name="empty_medicines">अहिले कुनै औषधि छैन</string>
+    <string name="empty_medicines_hint">तल थिचेर औषधि थप्न सक्नुहुन्छ</string>
+    <string-array name="medicine_types">
+        <item>ट्याब्लेट</item>
+        <item>लिक्विड</item>
+    </string-array>
+    <string name="stock">Stock</string>
+    <string name="pills">pills</string>
+    <string name="ml">ml</string>
+    <string name="days_left">Days Left</string>
+    <string name="days">days</string>
+    <string name="stock_nepali">स्टक</string>
+    <string name="pills_nepali">चक्कीहरू</string>
+    <string name="ml_nepali">मिलिलिटर</string>
+    <string name="days_left_nepali">बाँकी दिनहरू</string>
+    <string name="days_nepali">दिनहरू</string>
+    <string name="error_name_required">औषधिको नाम आवश्यक छ</string>
+    <string name="error_dosage_required">मात्रा आवश्यक छ</string>
+    <string name="error_type_required">औषधिको प्रकार चयन गर्नुहोस्</string>
+    <string name="error_stock_required">कुल स्टक आवश्यक छ</string>
+    <string name="error_stock_invalid">कुल स्टक शून्य भन्दा ठूलो हुनुपर्छ</string>
+    <string name="error_stock_number">मान्य संख्या प्रविष्ट गर्नुहोस्</string>
+    <string name="error_consumption_required">दैनिक खपत आवश्यक छ</string>
+    <string name="error_consumption_invalid">दैनिक खपत शून्य भन्दा ठूलो हुनुपर्छ</string>
+    <string name="error_consumption_number">मान्य संख्या प्रविष्ट गर्नुहोस्</string>
+    <string name="error_time_invalid">रिमाइन्डर समय हालको समयभन्दा कम्तिमा १ मिनेट पछिको हुनुपर्छ</string>
+</resources>
