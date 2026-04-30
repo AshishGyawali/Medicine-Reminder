@@ -59,18 +59,30 @@
             android:ellipsize="end"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/clock_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textSize="120sp"
-        android:textStyle="bold"
-        android:includeFontPadding="false"
-        android:layout_marginTop="12dp"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/medicine_image"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="20dp"
+        android:background="#1A1A1F"
+        app:shapeAppearanceOverlay="@style/RoundedImageLarge"
         app:layout_constraintTop_toBottomOf="@id/title_row"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/medicine_photo"/>
+
+    <ImageView
+        android:id="@+id/medicine_image_placeholder"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_pill"
+        app:tint="#FFFFFF"
+        android:alpha="0.6"
+        app:layout_constraintTop_toTopOf="@id/medicine_image"
+        app:layout_constraintBottom_toBottomOf="@id/medicine_image"
+        app:layout_constraintStart_toStartOf="@id/medicine_image"
+        app:layout_constraintEnd_toEndOf="@id/medicine_image"/>
 
     <TextView
         android:id="@+id/subtitle_text"
@@ -80,7 +92,7 @@
         android:textColor="#9CA3AF"
         android:textSize="20sp"
         android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@id/clock_text"
+        app:layout_constraintTop_toBottomOf="@id/medicine_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

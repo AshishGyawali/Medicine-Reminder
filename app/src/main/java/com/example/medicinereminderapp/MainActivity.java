@@ -30,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -185,7 +186,10 @@ public class MainActivity extends AppCompatActivity {
             Medicine m = medicines.get(position);
             holder.indexText.setText((position + 1) + ".");
             holder.nameTextView.setText(m.name);
-            holder.dosageTextView.setText(m.dosage);
+            holder.dosageTextView.setText(m.dosageWithUnit());
+
+            // Schedule days display
+            holder.scheduleDays.setText("🔁  " + m.daysLabel());
             holder.stockTextView.setText(String.format("%s: %.1f %s",
                     context.getString(R.string.stock_nepali),
                     m.totalStock,
@@ -216,6 +220,18 @@ public class MainActivity extends AppCompatActivity {
             holder.contentLayout.setTranslationX(0);
             holder.swipeOpen = false;
             attachSwipe(holder);
+
+            // Paused state: dim children only (keep card bg opaque so delete strip doesn't bleed through)
+            float childAlpha = m.active ? 1f : 0.45f;
+            android.view.ViewGroup card = (android.view.ViewGroup) holder.contentLayout;
+            for (int i = 0; i < card.getChildCount(); i++) {
+                card.getChildAt(i).setAlpha(childAlpha);
+            }
+            if (!m.active) {
+                holder.pausedBadge.setVisibility(View.VISIBLE);
+            } else {
+                holder.pausedBadge.setVisibility(View.GONE);
+            }
 
             holder.infoIcon.setOnClickListener(v -> openEdit(m));
             holder.deleteIcon.setOnClickListener(v -> deleteMedicine(holder, m));
@@ -300,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView indexText, nameTextView, dosageTextView, stockTextView, daysLeftTextView;
+            TextView indexText, nameTextView, dosageTextView, stockTextView, daysLeftTextView, pausedBadge, scheduleDays;
             View contentLayout;
             ImageView deleteIcon, infoIcon;
             boolean swipeOpen;
@@ -315,6 +331,8 @@ public class MainActivity extends AppCompatActivity {
                 contentLayout = v.findViewById(R.id.content_layout);
                 deleteIcon = v.findViewById(R.id.delete_icon);
                 infoIcon = v.findViewById(R.id.info_icon);
+                pausedBadge = v.findViewById(R.id.paused_badge);
+                scheduleDays = v.findViewById(R.id.schedule_days);
             }
         }
     }

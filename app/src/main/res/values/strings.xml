@@ -24,16 +24,41 @@
     <string name="overlay_required">लक नभएको अवस्थामा रिमाइन्डर देखाउन \"अरू एपहरूमा देखाउने\" अनुमति दिनुहोस्</string>
     <string name="medicine_type">औषधिको प्रकार</string>
     <string name="medicine_details">औषधिको विवरण</string>
-    <string name="hello_greeting">नमस्ते 👋</string>
+    <string name="hello_greeting">नमस्ते 🙏</string>
     <string name="your_medicines">तपाईंका औषधिहरू</string>
     <string name="total_medicines">कुल औषधि</string>
     <string name="low_stock">कम स्टक</string>
     <string name="empty_medicines">अहिले कुनै औषधि छैन</string>
     <string name="empty_medicines_hint">तल थिचेर औषधि थप्न सक्नुहुन्छ</string>
+    <string name="add_photo">तस्बिर थप्नुहोस्</string>
+    <string name="change_photo">तस्बिर परिवर्तन गर्नुहोस्</string>
+    <string name="medicine_photo">औषधिको तस्बिर</string>
+    <string name="photo_source">तस्बिरको स्रोत</string>
+    <string name="take_photo">तस्बिर खिच्नुहोस्</string>
+    <string name="choose_from_gallery">ग्यालरीबाट छान्नुहोस्</string>
+    <string name="repeat">दोहोर्याउने</string>
+    <string name="repeat_hint">दिन छान्नुहोस् (कुनै नछाने एक पटक मात्र)</string>
+    <string name="active_label">सक्रिय</string>
+    <string name="active_hint">रिमाइन्डर पठाउने</string>
+    <string name="paused">रोकिएको</string>
     <string-array name="medicine_types">
         <item>ट्याब्लेट</item>
         <item>लिक्विड</item>
     </string-array>
+    <string-array name="dosage_units">
+        <item>g</item>
+        <item>mg</item>
+        <item>mcg</item>
+        <item>µg</item>
+        <item>IU</item>
+        <item>mL</item>
+        <item>cc</item>
+        <item>gtt</item>
+    </string-array>
+    <string name="dosage_unit">इकाई</string>
+    <string name="schedule_icon">🔁</string>
+    <string name="every_day">हरेक दिन</string>
+    <string name="one_time">एक पटक</string>
     <string name="stock">Stock</string>
     <string name="pills">pills</string>
     <string name="ml">ml</string>

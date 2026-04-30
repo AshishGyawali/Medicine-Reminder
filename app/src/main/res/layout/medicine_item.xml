@@ -73,23 +73,52 @@
 
                 <TextView
                     android:id="@+id/medicine_name"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:maxLines="1"
                     android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/medicine_dosage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="6dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/paused_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/paused"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/stock_warn"
+                    android:background="@drawable/bg_chip_orange"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginStart="6dp"
+                    android:visibility="gone"/>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/medicine_dosage"
+                android:id="@+id/schedule_days"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginTop="2dp"/>
+                android:textSize="13sp"
+                android:textColor="@color/text_tertiary"
+                android:layout_marginTop="2dp"
+                android:drawablePadding="4dp"
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

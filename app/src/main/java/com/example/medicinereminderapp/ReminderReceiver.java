@@ -26,6 +26,8 @@ public class ReminderReceiver extends BroadcastReceiver {
             int timeIndex = intent.getIntExtra("time_index", 0);
             int hour = intent.getIntExtra("hour", -1);
             int minute = intent.getIntExtra("minute", -1);
+            String daysCsv = intent.getStringExtra("days_csv");
+            if (daysCsv == null) daysCsv = "0,1,2,3,4,5,6";
 
             Log.d(TAG, "Reminder fired: id=" + medicineId + ", idx=" + timeIndex + ", name=" + medicineName);
 
@@ -34,11 +36,12 @@ public class ReminderReceiver extends BroadcastReceiver {
                 return;
             }
 
-            // Lock in tomorrow's recurrence right away so the reminder fires daily even if the
-            // user never interacts with this one.
+            // Lock in next valid occurrence right away so the reminder repeats on its
+            // selected days even if the user never interacts with this one. One-time
+            // schedules (empty days_csv) are not rescheduled.
             if (hour >= 0 && minute >= 0) {
-                ReminderScheduler.scheduleNextDayForSlot(context, medicineId, medicineName,
-                        dosage, timeIndex, hour, minute);
+                ReminderScheduler.scheduleAfterFire(context, medicineId, medicineName,
+                        dosage, timeIndex, hour, minute, daysCsv);
             }
 
             Intent activityIntent = new Intent(context, ReminderActivity.class);
@@ -48,6 +51,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             activityIntent.putExtra("time_index", timeIndex);
             activityIntent.putExtra("hour", hour);
             activityIntent.putExtra("minute", minute);
+            activityIntent.putExtra("days_csv", daysCsv);
             activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_NO_USER_ACTION);

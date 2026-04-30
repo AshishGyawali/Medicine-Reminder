@@ -4,10 +4,13 @@ import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.widget.ImageView;
+import com.google.android.material.imageview.ShapeableImageView;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,8 +25,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 public class ReminderActivity extends AppCompatActivity {
@@ -43,6 +44,7 @@ public class ReminderActivity extends AppCompatActivity {
     private int timeIndex;
     private int slotHour;
     private int slotMinute;
+    private String daysCsv = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,8 @@ public class ReminderActivity extends AppCompatActivity {
         timeIndex = intent.getIntExtra("time_index", 0);
         slotHour = intent.getIntExtra("hour", -1);
         slotMinute = intent.getIntExtra("minute", -1);
+        daysCsv = intent.getStringExtra("days_csv");
+        if (daysCsv == null) daysCsv = "0,1,2,3,4,5,6";
 
         if (medicineId == -1 || medicineName == null) {
             Log.e(TAG, "Invalid extras, finishing");
@@ -100,21 +104,18 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     private void bindViews() {
-        TextView clock = findViewById(R.id.clock_text);
         TextView title = findViewById(R.id.medicine_title);
         Button snooze = findViewById(R.id.snooze_btn);
         SlideToStopView slide = findViewById(R.id.slide_to_stop);
-
-        SimpleDateFormat fmt = new SimpleDateFormat("h:mm", Locale.getDefault());
-        clock.setText(fmt.format(new Date()));
         title.setText(medicineName);
-
         snooze.setOnClickListener(v -> doSnooze());
         slide.setOnSlideCompleteListener(this::doConfirm);
     }
 
     private void loadStock() {
         TextView stockText = findViewById(R.id.stock_text);
+        ShapeableImageView imageView = findViewById(R.id.medicine_image);
+        ImageView placeholder = findViewById(R.id.medicine_image_placeholder);
         new Thread(() -> {
             try {
                 Medicine m = AppDatabase.get(this).medicineDao().getById(medicineId);
@@ -124,7 +125,14 @@ public class ReminderActivity extends AppCompatActivity {
                         : getString(R.string.ml_nepali);
                 String text = String.format(Locale.getDefault(), "%s: %.1f %s",
                         getString(R.string.stock_remaining), m.totalStock, unit);
-                runOnUiThread(() -> stockText.setText(text));
+                final Bitmap bmp = MedicineImageStore.loadBitmap(m.imageUri, 1024);
+                runOnUiThread(() -> {
+                    stockText.setText(text);
+                    if (bmp != null) {
+                        imageView.setImageBitmap(bmp);
+                        placeholder.setVisibility(android.view.View.GONE);
+                    }
+                });
             } catch (Exception e) {
                 Log.e(TAG, "loadStock failed", e);
             }
@@ -192,7 +200,7 @@ public class ReminderActivity extends AppCompatActivity {
         cancelNotification();
         if (slotHour >= 0 && slotMinute >= 0) {
             ReminderScheduler.scheduleSnooze(getApplicationContext(), medicineId, medicineName,
-                    dosage, timeIndex, slotHour, slotMinute, SNOOZE_MS);
+                    dosage, timeIndex, slotHour, slotMinute, daysCsv, SNOOZE_MS);
         }
         finishAndRemoveTaskCompat();
     }

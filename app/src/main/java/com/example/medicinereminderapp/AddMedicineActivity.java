@@ -1,5 +1,7 @@
 package com.example.medicinereminderapp;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,12 +11,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
+import com.google.android.material.imageview.ShapeableImageView;
+
+import java.io.File;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -23,13 +35,21 @@ import java.util.concurrent.Executors;
 public class AddMedicineActivity extends AppCompatActivity {
     private static final String TAG = "AddMedicineActivity";
     private EditText nameInput, dosageInput, totalStockInput, dailyConsumptionInput;
-    private Spinner medicineTypeSpinner;
+    private Spinner medicineTypeSpinner, dosageUnitSpinner;
     private LinearLayout timePickersContainer;
     private TextView nameError, dosageError, typeError, stockError, consumptionError, timeError;
     private Button saveBtn;
+    private DayOfWeekPicker dayPicker;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private int currentTimeCount = 1;
+    private String selectedImagePath = "";
+    private ShapeableImageView imagePreview;
+    private ImageView pickerIcon;
+    private TextView pickerLabel;
+    private ActivityResultLauncher<String> imagePickerLauncher;
+    private ActivityResultLauncher<Uri> cameraLauncher;
+    private File pendingCameraFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +74,34 @@ public class AddMedicineActivity extends AppCompatActivity {
             timePickersContainer = findViewById(R.id.time_pickers_container);
             timeError = findViewById(R.id.time_picker_error);
             saveBtn = findViewById(R.id.save_btn);
+            dayPicker = findViewById(R.id.day_picker);
+
+            FrameLayout pickerContainer = findViewById(R.id.image_picker_container);
+            imagePreview = findViewById(R.id.medicine_image_preview);
+            pickerIcon = findViewById(R.id.image_picker_icon);
+            pickerLabel = findViewById(R.id.image_picker_label);
+            imagePickerLauncher = registerForActivityResult(
+                    new ActivityResultContracts.GetContent(), this::onImagePicked);
+            cameraLauncher = registerForActivityResult(
+                    new ActivityResultContracts.TakePicture(), success -> {
+                        if (success && pendingCameraFile != null) {
+                            applyCapturedFile(pendingCameraFile.getAbsolutePath());
+                        }
+                    });
+            pickerContainer.setOnClickListener(v -> showPhotoSourceDialog());
 
             CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(this,
                     android.R.layout.simple_spinner_item, getResources().getTextArray(R.array.medicine_types));
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             medicineTypeSpinner.setAdapter(adapter);
             medicineTypeSpinner.setSelection(0);
+
+            dosageUnitSpinner = findViewById(R.id.dosage_unit_spinner);
+            CustomSpinnerAdapter unitAdapter = new CustomSpinnerAdapter(this,
+                    android.R.layout.simple_spinner_item, getResources().getTextArray(R.array.dosage_units));
+            unitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            dosageUnitSpinner.setAdapter(unitAdapter);
+            dosageUnitSpinner.setSelection(1); // default 'mg'
 
             renderTimePickers(1);
             dailyConsumptionInput.addTextChangedListener(new TextWatcher() {
@@ -92,6 +134,73 @@ public class AddMedicineActivity extends AppCompatActivity {
     private void renderTimePickers(int count) {
         currentTimeCount = count;
         TimePickerListHelper.render(this, timePickersContainer, count, null);
+    }
+
+    private void showPhotoSourceDialog() {
+        CharSequence[] options = new CharSequence[]{
+                getString(R.string.take_photo),
+                getString(R.string.choose_from_gallery)
+        };
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.photo_source)
+                .setItems(options, (d, which) -> {
+                    if (which == 0) launchCamera();
+                    else imagePickerLauncher.launch("image/*");
+                })
+                .show();
+    }
+
+    private void launchCamera() {
+        try {
+            File dir = new File(getFilesDir(), "medicine_images");
+            if (!dir.exists() && !dir.mkdirs()) {
+                Toast.makeText(this, "क्यामेरा खोल्न असफल", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            pendingCameraFile = new File(dir, "med_cam_" + System.currentTimeMillis() + ".jpg");
+            Uri uri = FileProvider.getUriForFile(this,
+                    getPackageName() + ".fileprovider", pendingCameraFile);
+            cameraLauncher.launch(uri);
+        } catch (Exception e) {
+            Log.e(TAG, "camera launch failed", e);
+            Toast.makeText(this, "क्यामेरा खोल्न असफल", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onImagePicked(Uri uri) {
+        if (uri == null) return;
+        executor.execute(() -> {
+            try {
+                String path = MedicineImageStore.saveCopy(this, uri);
+                Bitmap bmp = MedicineImageStore.loadBitmap(path, 1024);
+                mainHandler.post(() -> applyBitmap(path, bmp));
+            } catch (Exception e) {
+                Log.e(TAG, "image pick failed", e);
+                mainHandler.post(() -> Toast.makeText(this, "तस्बिर सेभ गर्न असफल", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void applyCapturedFile(String path) {
+        executor.execute(() -> {
+            Bitmap bmp = MedicineImageStore.loadBitmap(path, 1024);
+            mainHandler.post(() -> applyBitmap(path, bmp));
+        });
+    }
+
+    private void applyBitmap(String path, Bitmap bmp) {
+        if (bmp == null) {
+            Toast.makeText(this, "तस्बिर लोड गर्न असफल", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (selectedImagePath != null && !selectedImagePath.isEmpty()
+                && !selectedImagePath.equals(path)) {
+            MedicineImageStore.delete(selectedImagePath);
+        }
+        selectedImagePath = path;
+        imagePreview.setImageBitmap(bmp);
+        pickerIcon.setVisibility(View.GONE);
+        pickerLabel.setText(R.string.change_photo);
     }
 
     private void saveMedicine() {
@@ -145,6 +254,10 @@ public class AddMedicineActivity extends AppCompatActivity {
         medicine.hour = times.get(0)[0];
         medicine.minute = times.get(0)[1];
         medicine.times = Medicine.timesToCsv(times);
+        medicine.imageUri = selectedImagePath;
+        medicine.daysOfWeek = Medicine.daysToCsv(dayPicker.getSelectedDays());
+        medicine.dosageUnit = dosageUnitSpinner.getSelectedItem() != null
+                ? dosageUnitSpinner.getSelectedItem().toString() : "mg";
 
         executor.execute(() -> {
             try {
