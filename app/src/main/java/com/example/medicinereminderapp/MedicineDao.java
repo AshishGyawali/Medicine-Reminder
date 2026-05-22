@@ -12,6 +12,9 @@ public interface MedicineDao {
     @Query("SELECT * FROM medicine")
     List<Medicine> getAll();
 
+    @Query("SELECT * FROM medicine WHERE active = 1 ORDER BY name COLLATE NOCASE")
+    List<Medicine> getActiveMedicines();
+
     @Insert
     long insert(Medicine medicine);
 

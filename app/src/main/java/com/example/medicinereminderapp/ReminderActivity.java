@@ -29,7 +29,7 @@ import java.util.Locale;
 
 public class ReminderActivity extends AppCompatActivity {
     private static final String TAG = "ReminderActivity";
-    private static final long AUTO_DISMISS_MS = 5 * 60 * 1000L;
+    private static final long AUTO_DISMISS_MS = 2 * 60 * 1000L;
     private static final long SNOOZE_MS = 10 * 60 * 1000L;
 
     private Ringtone ringtone;
@@ -60,7 +60,8 @@ public class ReminderActivity extends AppCompatActivity {
         slotHour = intent.getIntExtra("hour", -1);
         slotMinute = intent.getIntExtra("minute", -1);
         daysCsv = intent.getStringExtra("days_csv");
-        if (daysCsv == null) daysCsv = "0,1,2,3,4,5,6";
+        if (daysCsv == null)
+            daysCsv = "0,1,2,3,4,5,6";
 
         if (medicineId == -1 || medicineName == null) {
             Log.e(TAG, "Invalid extras, finishing");
@@ -85,7 +86,8 @@ public class ReminderActivity extends AppCompatActivity {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
             KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            if (km != null) km.requestDismissKeyguard(this, null);
+            if (km != null)
+                km.requestDismissKeyguard(this, null);
         } else {
             getWindow().addFlags(
                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
@@ -119,7 +121,8 @@ public class ReminderActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 Medicine m = AppDatabase.get(this).medicineDao().getById(medicineId);
-                if (m == null) return;
+                if (m == null)
+                    return;
                 String unit = "TABLET".equals(m.type)
                         ? getString(R.string.pills_nepali)
                         : getString(R.string.ml_nepali);
@@ -162,7 +165,7 @@ public class ReminderActivity extends AppCompatActivity {
         try {
             vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             if (vibrator != null && vibrator.hasVibrator()) {
-                long[] pattern = {0, 800, 600};
+                long[] pattern = { 0, 800, 600 };
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0));
                 } else {
@@ -175,8 +178,16 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     private void stopAlarmFx() {
-        try { if (ringtone != null && ringtone.isPlaying()) ringtone.stop(); } catch (Exception ignored) {}
-        try { if (vibrator != null) vibrator.cancel(); } catch (Exception ignored) {}
+        try {
+            if (ringtone != null && ringtone.isPlaying())
+                ringtone.stop();
+        } catch (Exception ignored) {
+        }
+        try {
+            if (vibrator != null)
+                vibrator.cancel();
+        } catch (Exception ignored) {
+        }
     }
 
     private void doConfirm() {
@@ -190,7 +201,8 @@ public class ReminderActivity extends AppCompatActivity {
                 Log.e(TAG, "confirm failed", e);
             }
         }).start();
-        // Tomorrow's slot was already scheduled in ReminderReceiver — nothing else to do.
+        // Tomorrow's slot was already scheduled in ReminderReceiver — nothing else to
+        // do.
         finishAndRemoveTaskCompat();
     }
 
@@ -213,7 +225,8 @@ public class ReminderActivity extends AppCompatActivity {
 
     private void cancelNotification() {
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (nm != null) nm.cancel(medicineId);
+        if (nm != null)
+            nm.cancel(medicineId);
     }
 
     private void finishAndRemoveTaskCompat() {
@@ -235,7 +248,10 @@ public class ReminderActivity extends AppCompatActivity {
         cancelAutoDismiss();
         stopAlarmFx();
         if (wakeLock != null && wakeLock.isHeld()) {
-            try { wakeLock.release(); } catch (Exception ignored) {}
+            try {
+                wakeLock.release();
+            } catch (Exception ignored) {
+            }
         }
     }
 }

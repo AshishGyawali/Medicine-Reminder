@@ -58,6 +58,29 @@
         <item name="android:fontFamily">@font/noto_sans_devanagari_regular</item>
     </style>
 
+    <style name="SecondaryButtonBase">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/noto_sans_devanagari_regular</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="SecondaryButtonAccent" parent="SecondaryButtonBase">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:background">@drawable/bg_secondary_button_accent</item>
+    </style>
+
+    <style name="SecondaryButtonSoftPrimary" parent="SecondaryButtonBase">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:background">@drawable/bg_secondary_button_primary_soft</item>
+    </style>
+
     <style name="SectionHeader">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

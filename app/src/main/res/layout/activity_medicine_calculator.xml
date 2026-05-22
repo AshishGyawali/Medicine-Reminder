@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:elevation="0dp"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:navigationIconTint="@color/brand_primary"
+        app:title="@string/medicine_calculator_title"
+        app:titleTextAppearance="@style/ToolbarTitle" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_selection_card"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/medicine_calculator_title"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/medicine_calculator_intro"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionHeader"
+                android:text="@string/step_select_medicines" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_selection_card"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <CheckBox
+                    android:id="@+id/select_all_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_all_medicines"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/active_medicine_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/no_active_medicines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/no_active_medicines"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/medicine_selection_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:nestedScrollingEnabled="false" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/SectionHeader"
+                android:text="@string/step_input_days" />
+
+            <TextView
+                style="@style/FormLabel"
+                android:text="@string/days_for_purchase" />
+
+            <EditText
+                android:id="@+id/days_input"
+                style="@style/FormInput"
+                android:hint="@string/days_hint"
+                android:inputType="number"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/days_input_error"
+                style="@style/ErrorText"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/selection_error"
+                style="@style/ErrorText"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/calculate_button"
+                style="@style/PrimaryButton"
+                android:layout_marginTop="18dp"
+                android:text="@string/calculate_purchase" />
+
+            <LinearLayout
+                android:id="@+id/results_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/SectionHeader"
+                    android:text="@string/step_results" />
+
+                <TextView
+                    android:id="@+id/result_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:id="@+id/export_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_selection_card"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/calculation_summary"
+                        android:textColor="@color/text_primary"
+                        android:textSize="19sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/generated_on_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@color/divider" />
+
+                    <LinearLayout
+                        android:id="@+id/result_list_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="4dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@color/divider" />
+
+                    <TextView
+                        android:id="@+id/summary_footer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:textColor="@color/brand_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/copy_text_button"
+                    style="@style/SecondaryButtonAccent"
+                    android:layout_marginTop="14dp"
+                    android:drawableStart="@android:drawable/ic_menu_edit"
+                    android:drawableTint="@color/brand_accent"
+                    android:text="@string/copy_as_text"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/generate_jpeg_button"
+                    style="@style/SecondaryButtonSoftPrimary"
+                    android:layout_marginTop="10dp"
+                    android:drawableStart="@android:drawable/ic_menu_gallery"
+                    android:drawableTint="@color/brand_primary"
+                    android:text="@string/generate_jpeg"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/generate_pdf_button"
+                    style="@style/PrimaryButton"
+                    android:layout_marginTop="10dp"
+                    android:drawableStart="@android:drawable/ic_menu_save"
+                    android:drawableTint="@color/brand_on_primary"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:text="@string/generate_pdf" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

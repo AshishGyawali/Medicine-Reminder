@@ -10,12 +10,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,12 +38,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int REQ_NOTIFICATIONS = 100;
     private static final float SWIPE_OPEN_DP = 80f;
+    private static final float FAB_MENU_TRANSLATION_DP = 20f;
 
     private AppDatabase db;
     private RecyclerView medicineList;
@@ -43,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView totalCountView;
     private TextView lowCountView;
     private View emptyState;
+    private View fabMenuScrim;
+    private View fabAddMedicineOption;
+    private View fabBuyMedicineOption;
+    private FloatingActionButton addMedicineFab;
+    private boolean isFabMenuOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +75,23 @@ public class MainActivity extends AppCompatActivity {
 
             db = AppDatabase.get(this);
 
-            FloatingActionButton fab = findViewById(R.id.add_medicine_fab);
-            fab.setOnClickListener(v -> startActivity(new Intent(this, AddMedicineActivity.class)));
+            fabMenuScrim = findViewById(R.id.fab_menu_scrim);
+            fabAddMedicineOption = findViewById(R.id.fab_add_medicine_option);
+            fabBuyMedicineOption = findViewById(R.id.fab_buy_medicine_option);
+            addMedicineFab = findViewById(R.id.add_medicine_fab);
+
+            fabMenuScrim.setOnClickListener(v -> closeFabMenu(true));
+            fabAddMedicineOption.setOnClickListener(v -> {
+                closeFabMenu(false);
+                startActivity(new Intent(this, AddMedicineActivity.class));
+            });
+            fabBuyMedicineOption.setOnClickListener(v -> {
+                closeFabMenu(false);
+                startActivity(new Intent(this, MedicineCalculatorActivity.class));
+            });
+            addMedicineFab.setOnClickListener(v -> toggleFabMenu());
+
+            setupDeveloperCredit();
 
             requestRuntimePermissions();
             loadMedicines();
@@ -126,7 +154,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        closeFabMenu(false);
         loadMedicines();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isFabMenuOpen) {
+            closeFabMenu(true);
+            return;
+        }
+        super.onBackPressed();
     }
 
     private void loadMedicines() {
@@ -154,6 +192,127 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(() -> Toast.makeText(this, "औषधि लोड गर्न असफल", Toast.LENGTH_LONG).show());
             }
         }).start();
+    }
+
+    private void setupDeveloperCredit() {
+        TextView credit = findViewById(R.id.developer_credit);
+        String full = getString(R.string.developer_credit);
+        String name = "Ashish Gyawali";
+        int start = full.indexOf(name);
+        if (start < 0) return;
+        int end = start + name.length();
+
+        SpannableString ss = new SpannableString(full);
+        ss.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.developer_linkedin))));
+            }
+
+            @Override
+            public void updateDrawState(@NonNull android.text.TextPaint ds) {
+                ds.setUnderlineText(false);
+                ds.setColor(ContextCompat.getColor(MainActivity.this, R.color.brand_primary));
+            }
+        }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        credit.setText(ss);
+        credit.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void toggleFabMenu() {
+        if (isFabMenuOpen) {
+            closeFabMenu(true);
+        } else {
+            openFabMenu();
+        }
+    }
+
+    private void openFabMenu() {
+        if (isFabMenuOpen) return;
+        isFabMenuOpen = true;
+        fabMenuScrim.setVisibility(View.VISIBLE);
+        fabMenuScrim.setAlpha(0f);
+        fabMenuScrim.animate()
+                .alpha(1f)
+                .setDuration(180)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
+        showFabOption(fabAddMedicineOption, 0);
+        showFabOption(fabBuyMedicineOption, 35);
+        addMedicineFab.animate()
+                .rotation(45f)
+                .setDuration(220)
+                .setInterpolator(new OvershootInterpolator())
+                .start();
+    }
+
+    private void closeFabMenu(boolean animate) {
+        if (!isFabMenuOpen && animate) return;
+        isFabMenuOpen = false;
+        if (!animate) {
+            fabMenuScrim.animate().cancel();
+            fabMenuScrim.setAlpha(0f);
+            fabMenuScrim.setVisibility(View.GONE);
+            hideFabOptionImmediately(fabAddMedicineOption);
+            hideFabOptionImmediately(fabBuyMedicineOption);
+            addMedicineFab.animate().cancel();
+            addMedicineFab.setRotation(0f);
+            return;
+        }
+        fabMenuScrim.animate()
+                .alpha(0f)
+                .setDuration(160)
+                .withEndAction(() -> fabMenuScrim.setVisibility(View.GONE))
+                .start();
+        hideFabOption(fabBuyMedicineOption, 0);
+        hideFabOption(fabAddMedicineOption, 25);
+        addMedicineFab.animate()
+                .rotation(0f)
+                .setDuration(180)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
+    }
+
+    private void showFabOption(View option, long startDelayMs) {
+        option.setVisibility(View.VISIBLE);
+        option.setAlpha(0f);
+        option.setScaleX(0.92f);
+        option.setScaleY(0.92f);
+        option.setTranslationY(dpToPx(FAB_MENU_TRANSLATION_DP));
+        option.animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .translationY(0f)
+                .setStartDelay(startDelayMs)
+                .setDuration(220)
+                .setInterpolator(new OvershootInterpolator(0.85f))
+                .start();
+    }
+
+    private void hideFabOption(View option, long startDelayMs) {
+        option.animate()
+                .alpha(0f)
+                .scaleX(0.92f)
+                .scaleY(0.92f)
+                .translationY(dpToPx(FAB_MENU_TRANSLATION_DP))
+                .setStartDelay(startDelayMs)
+                .setDuration(150)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> option.setVisibility(View.GONE))
+                .start();
+    }
+
+    private void hideFabOptionImmediately(View option) {
+        option.animate().cancel();
+        option.setAlpha(0f);
+        option.setScaleX(0.92f);
+        option.setScaleY(0.92f);
+        option.setTranslationY(dpToPx(FAB_MENU_TRANSLATION_DP));
+        option.setVisibility(View.GONE);
     }
 
     private float dpToPx(float dp) {

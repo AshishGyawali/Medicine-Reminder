@@ -219,6 +219,26 @@ public class EditMedicineActivity extends AppCompatActivity {
 
         List<int[]> times = TimePickerListHelper.readValues(timePickersContainer);
 
+        // For one-time reminders on active medicines, ensure every time is at least 1 min in the future
+        java.util.Set<Integer> selectedDays = dayPicker.getSelectedDays();
+        boolean isActive = activeSwitch.isChecked();
+        if (isActive && selectedDays.isEmpty()) {
+            java.util.Calendar now = java.util.Calendar.getInstance();
+            long nowMs = now.getTimeInMillis();
+            for (int[] hm : times) {
+                java.util.Calendar slot = java.util.Calendar.getInstance();
+                slot.set(java.util.Calendar.HOUR_OF_DAY, hm[0]);
+                slot.set(java.util.Calendar.MINUTE, hm[1]);
+                slot.set(java.util.Calendar.SECOND, 0);
+                slot.set(java.util.Calendar.MILLISECOND, 0);
+                if (slot.getTimeInMillis() - nowMs < 60_000) {
+                    showError(timeError, R.string.error_time_invalid);
+                    hasError = true;
+                    break;
+                }
+            }
+        }
+
         if (hasError) {
             Toast.makeText(this, "कृपया सबै विवरणहरू भर्नुहोस्", Toast.LENGTH_SHORT).show();
             return;
