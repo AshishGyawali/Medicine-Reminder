@@ -16,9 +16,8 @@ A comprehensive and user-friendly Android application designed to help users tra
 
 | Home / Dashboard | Add Medicine | Lock-Screen Alarm | Purchase Calculator |
 | :---: | :---: | :---: | :---: |
-| <img src="Screenshots/Homepage.png" width="200" alt="Home Screen Placeholder"/> | <img src="Screenshots/add_medicine.png" width="200" alt="Add Medicine Placeholder"/> | <img src="Screenshots/ReminderUIwithMedImg.png" width="200" alt="Alarm Screen Placeholder"/> | <img src="BuyMedicineUI.png" width="200" alt="Calculator Placeholder"/> |
+| <img src="Screenshots/Homepage.png" width="200" alt="Home Screen Placeholder"/> | <img src="Screenshots/addMedicine.png" width="200" alt="Add Medicine Placeholder"/> | <img src="Screenshots/ReminderUIwithMedImg.png" width="200" alt="Alarm Screen Placeholder"/> | <img src="Screenshots/BuyMedicineUI.png" width="200" alt="Calculator Placeholder"/> |
 
-*(Note: Replace `placeholder_home.png`, etc., with the actual image links or paths once uploaded to your repository.)*
 
 ## 🛠️ Tech Stack
 
@@ -35,7 +34,7 @@ A comprehensive and user-friendly Android application designed to help users tra
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/MedicineReminderApp.git
+   git clone https://github.com/AshishGyawali/Medicine-Reminder.git
    ```
 2. Open the project in **Android Studio**.
 3. Sync the project with Gradle files.
